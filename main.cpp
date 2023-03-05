@@ -7,7 +7,7 @@ int GET_BATTERY_PERCENTAGE();
 
 int main()
 {
-	cloud_flight::HYPERX_DEVICE();
+	cloud_flight::HID_DEVICE();
 }
 
 int GET_BATTERY_PERCENTAGE()

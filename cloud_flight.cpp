@@ -5,7 +5,7 @@ const DWORD PRODUCT_ID = 0x1723;
 const DWORD BATTERY_PACKET = 20;
 
 // TO DO
-int cloud_flight::HYPERX_DEVICE()
+int cloud_flight::HID_DEVICE()
 {
 	libusb_device* dev;
 	libusb_device_handle* dev_handle;
@@ -18,31 +18,23 @@ int cloud_flight::HYPERX_DEVICE()
 		std::cerr << "Failed to initialize!" << std::endl;
 		return 1;
 	}
-	
-	CREATE_CONNECTION(ctx, dev, dev_handle, VENDOR_ID, PRODUCT_ID);
 
-	return 0;
-}
-
-// TO DO
-int cloud_flight::CREATE_CONNECTION(libusb_context *LIB_CONTEXT, libusb_device *DEVICE, libusb_device_handle *DEVICE_HANDLE, UINT VENDOR, UINT PRODUCT)
-{
-	DEVICE_HANDLE = libusb_open_device_with_vid_pid(LIB_CONTEXT, VENDOR_ID, PRODUCT_ID);
-	if (DEVICE_HANDLE == NULL)
+	dev_handle = libusb_open_device_with_vid_pid(ctx, VENDOR_ID, PRODUCT_ID);
+	if (dev_handle == NULL)
 	{
 		std::cerr << "Failed to open device!" << std::endl;
 	}
 
-	if (libusb_kernel_driver_active(DEVICE_HANDLE, BATTERY_PACKET) == 1)
+	if (libusb_kernel_driver_active(dev_handle, BATTERY_PACKET) == 1)
 	{
 		std::cout << "Kernel Driver Active" << std::endl;
-		if (libusb_detach_kernel_driver(DEVICE_HANDLE, BATTERY_PACKET) == 0)
+		if (libusb_detach_kernel_driver(dev_handle, BATTERY_PACKET) == 0)
 		{
 			std::cout << "Kernel Driver Detached" << std::endl;
 		}
 	}
 
-	r = libusb_claim_interface(DEVICE_HANDLE, BATTERY_PACKET);
+	r = libusb_claim_interface(dev_handle, BATTERY_PACKET);
 	if (r < 0)
 	{
 		std::cerr << "Could not claim interface!" << std::endl;
@@ -50,6 +42,12 @@ int cloud_flight::CREATE_CONNECTION(libusb_context *LIB_CONTEXT, libusb_device *
 	}
 	std::cout << "Interface claimed!" << std::endl;
 
+	return 0;
+}
+
+// TO DO
+int cloud_flight::CREATE_CONNECTION(libusb_context *LIB_CONTEXT, libusb_device *DEVICE, libusb_device_handle *DEVICE_HANDLE, UINT VENDOR, UINT PRODUCT)
+{
 	return 0;
 }
 
