@@ -6,6 +6,4 @@ public:
 	static int CREATE_CONNECTION();
 	static int READ_BATTERY();
 	static int CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue);
-
-	static int GET_BATTERY_PERCENTAGE();
 };

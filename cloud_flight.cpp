@@ -124,9 +124,3 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue)
 
 	return 255;
 }
-
-int cloud_flight::GET_BATTERY_PERCENTAGE()
-{
-	READ_BATTERY();
-	return 0;
-}
