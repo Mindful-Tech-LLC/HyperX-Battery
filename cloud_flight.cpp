@@ -74,7 +74,6 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue)
 	switch (chargeState)
 	{
 		case 0x0e:
-		{
 			if (mValue >= 0 && mValue < 90)
 				return 10;
 			else if (mValue >= 90 && mValue < 119)
@@ -99,9 +98,10 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue)
 				return 60;
 			else if (mValue >= 240 && mValue < 255)
 				return 65;
-		}
+
+			break;
+
 		case 0x0f:
-		{
 			if (mValue >= 0 && mValue < 19)
 				return 70;
 			else if (mValue >= 20 && mValue < 49)
@@ -116,7 +116,8 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue)
 				return 95;
 			else if (mValue >= 130 && mValue < 255)
 				return 100;
-		}
+
+			break;
 	}
 
 	return 255;
