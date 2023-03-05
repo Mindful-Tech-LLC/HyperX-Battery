@@ -1,1 +1,1 @@
-# HyperXBattery
+# HyperX Battery
