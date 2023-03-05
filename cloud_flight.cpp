@@ -1,7 +1,4 @@
 #include "cloud_flight.h"
-#include <iostream>
-#include <Windows.h>
-#include <libusb-1.0/libusb.h>
 
 const DWORD VENDOR_ID = 0x0951;
 const DWORD PRODUCT_ID = 0x1723;
@@ -10,7 +7,7 @@ const DWORD BATTERY_PACKET = 20;
 // TO DO
 int cloud_flight::HYPERX_DEVICE()
 {
-	/*libusb_device* dev;
+	libusb_device* dev;
 	libusb_device_handle* dev_handle;
 	libusb_context* ctx = NULL;
 
@@ -21,36 +18,38 @@ int cloud_flight::HYPERX_DEVICE()
 		std::cerr << "Failed to initialize!" << std::endl;
 		return 1;
 	}
-
-	dev_handle = libusb_open_device_with_vid_pid(ctx, VENDOR_ID, PRODUCT_ID);
-	if (dev_handle == NULL)
-	{
-		std::cerr << "Failed to open device!" << std::endl;
-	}
-
-	if (libusb_kernel_driver_active(dev_handle, BATTERY_PACKET) == 1)
-	{
-		std::cout << "Kernel Driver Active" << std::endl;
-		if (libusb_detach_kernel_driver(dev_handle, BATTERY_PACKET) == 0)
-		{
-			std::cout << "Kernel Driver Detached" << std::endl;
-		}
-	}
-
-	r = libusb_claim_interface(dev_handle, BATTERY_PACKET);
-	if (r < 0)
-	{
-		std::cerr << "Could not claim interface!" << std::endl;
-		return 1;
-	}
-	std::cout << "Interface claimed!" << std::endl;*/
+	
+	CREATE_CONNECTION(ctx, dev, dev_handle, VENDOR_ID, PRODUCT_ID);
 
 	return 0;
 }
 
 // TO DO
-int cloud_flight::CREATE_CONNECTION()
+int cloud_flight::CREATE_CONNECTION(libusb_context *LIB_CONTEXT, libusb_device *DEVICE, libusb_device_handle *DEVICE_HANDLE, UINT VENDOR, UINT PRODUCT)
 {
+	DEVICE_HANDLE = libusb_open_device_with_vid_pid(LIB_CONTEXT, VENDOR_ID, PRODUCT_ID);
+	if (DEVICE_HANDLE == NULL)
+	{
+		std::cerr << "Failed to open device!" << std::endl;
+	}
+
+	if (libusb_kernel_driver_active(DEVICE_HANDLE, BATTERY_PACKET) == 1)
+	{
+		std::cout << "Kernel Driver Active" << std::endl;
+		if (libusb_detach_kernel_driver(DEVICE_HANDLE, BATTERY_PACKET) == 0)
+		{
+			std::cout << "Kernel Driver Detached" << std::endl;
+		}
+	}
+
+	r = libusb_claim_interface(DEVICE_HANDLE, BATTERY_PACKET);
+	if (r < 0)
+	{
+		std::cerr << "Could not claim interface!" << std::endl;
+		return 1;
+	}
+	std::cout << "Interface claimed!" << std::endl;
+
 	return 0;
 }
 
