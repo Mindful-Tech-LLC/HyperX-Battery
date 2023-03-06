@@ -1,124 +1,162 @@
 #include "cloud_flight.h"
 
-const DWORD VENDOR_ID = 0x0951;
-const DWORD PRODUCT_ID = 0x1723;
-const DWORD BATTERY_PACKET = 20;
+const int VENDOR_ID = 0x0951; //2385
+const int PRODUCT_ID = 0x1723; //5923
 
 // TO DO
 int cloud_flight::HID_DEVICE()
 {
-	libusb_device* dev;
-	libusb_device_handle* dev_handle;
-	libusb_context* ctx = NULL;
+	int HID;
+	hid_device* HID_HANDLE{};
 
-	UINT r = libusb_init(&ctx);
+	HID = hid_init();
 
-	if (r < 0)
+	if (!(HID_HANDLE = hid_open(VENDOR_ID, PRODUCT_ID, NULL)))
 	{
-		std::cerr << "Failed to initialize!" << std::endl;
-		return 1;
+		std::cerr << "Error opening device!" << std::endl;
 	}
 
-	dev_handle = libusb_open_device_with_vid_pid(ctx, VENDOR_ID, PRODUCT_ID);
-	if (dev_handle == NULL)
-	{
-		std::cerr << "Failed to open device!" << std::endl;
-	}
+	do { READ_BATTERY(HID_HANDLE); } while (true);
 
-	if (libusb_kernel_driver_active(dev_handle, BATTERY_PACKET) == 1)
-	{
-		std::cout << "Kernel Driver Active" << std::endl;
-		if (libusb_detach_kernel_driver(dev_handle, BATTERY_PACKET) == 0)
-		{
-			std::cout << "Kernel Driver Detached" << std::endl;
-		}
-	}
-
-	r = libusb_claim_interface(dev_handle, BATTERY_PACKET);
-	if (r < 0)
-	{
-		std::cerr << "Could not claim interface!" << std::endl;
-		return 1;
-	}
-	std::cout << "Interface claimed!" << std::endl;
-
-	return 0;
+	EXIT();
 }
 
-// TO DO
-int cloud_flight::CREATE_CONNECTION(libusb_context *LIB_CONTEXT, libusb_device *DEVICE, libusb_device_handle *DEVICE_HANDLE, UINT VENDOR, UINT PRODUCT)
+int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 {
-	return 0;
-}
-
-int cloud_flight::READ_BATTERY()
-{
-	WCHAR* report = new WCHAR[20];
+	unsigned char report[20];
 	report[0] = 0x21;
 	report[1] = 0xff;
 	report[2] = 0x05;
 
-	WCHAR* reportIn = new WCHAR[20];
+	hid_write(HID_HANDLE, report, 20);
+	hid_read(HID_HANDLE, report, 20);
 
-	UINT chargeState = reportIn[3];
-	UINT mValue = reportIn[4] != 0 ? reportIn[4] : chargeState;
+#ifdef DEBUG
+	for (int j = 0; j < 20; j++)
+	{
+		std::cout << int((unsigned char)report[j]) << " | ";
+	}
+#endif
 
-	UINT percentage = CALCULATE_BATTERY_PERCENTAGE(chargeState, mValue);
+	int CHARGE_STATE = report[3];
+	int M_VALUE = report[4] != 0 ? report[4] : CHARGE_STATE;
 
-	return percentage;
+	int BATTERY_PERCENTAGE = CALCULATE_BATTERY_PERCENTAGE(CHARGE_STATE, M_VALUE);
+
+	std::cout << '\r' << "Battery At: " << BATTERY_PERCENTAGE << std::flush;
+
+	return BATTERY_PERCENTAGE;
 }
 
 // Not using compiler extension for ranges in case x ... y:
-int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int chargeState, int mValue)
+int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 {
-	switch (chargeState)
+	switch (CHARGE_STATE)
 	{
-		case 0x0e:
-			if (mValue >= 0 && mValue < 90)
+		case 0x10:
+			if (M_VALUE >= 0 && M_VALUE < 90)
 				return 10;
-			else if (mValue >= 90 && mValue < 119)
+			else if (M_VALUE >= 90 && M_VALUE < 119)
 				return 15;
-			else if (mValue >= 120 && mValue < 148)
+			else if (M_VALUE >= 120 && M_VALUE < 148)
 				return 20;
-			else if (mValue >= 149 && mValue < 159)
+			else if (M_VALUE >= 149 && M_VALUE < 159)
 				return 25;
-			else if (mValue >= 160 && mValue < 169)
+			else if (M_VALUE >= 160 && M_VALUE < 169)
 				return 30;
-			else if (mValue >= 170 && mValue < 179)
+			else if (M_VALUE >= 170 && M_VALUE < 179)
 				return 35;
-			else if (mValue >= 180 && mValue < 189)
+			else if (M_VALUE >= 180 && M_VALUE < 189)
 				return 40;
-			else if (mValue >= 190 && mValue < 199)
+			else if (M_VALUE >= 190 && M_VALUE < 199)
 				return 45;
-			else if (mValue >= 200 && mValue < 209)
+			else if (M_VALUE >= 200 && M_VALUE < 209)
 				return 50;
-			else if (mValue >= 210 && mValue < 219)
+			else if (M_VALUE >= 210 && M_VALUE < 219)
 				return 55;
-			else if (mValue >= 220 && mValue < 239)
+			else if (M_VALUE >= 220 && M_VALUE < 239)
 				return 60;
-			else if (mValue >= 240 && mValue < 255)
+			else if (M_VALUE >= 240 && M_VALUE < 255)
 				return 65;
 
-			break;
-
-		case 0x0f:
-			if (mValue >= 0 && mValue < 19)
+		case 0xf:
+			if (M_VALUE >= 0 && M_VALUE < 19)
 				return 70;
-			else if (mValue >= 20 && mValue < 49)
+			else if (M_VALUE >= 20 && M_VALUE < 49)
 				return 75;
-			else if (mValue >= 50 && mValue < 69)
+			else if (M_VALUE >= 50 && M_VALUE < 69)
 				return 80;
-			else if (mValue >= 70 && mValue < 99)
+			else if (M_VALUE >= 70 && M_VALUE < 99)
 				return 85;
-			else if (mValue >= 100 && mValue < 119)
+			else if (M_VALUE >= 100 && M_VALUE < 119)
 				return 90;
-			else if (mValue >= 120 && mValue < 129)
+			else if (M_VALUE >= 120 && M_VALUE < 129)
 				return 95;
-			else if (mValue >= 130 && mValue < 255)
+			else if (M_VALUE >= 130 && M_VALUE < 255)
 				return 100;
 
-			break;
+		case 0xe:
+			if (M_VALUE < 250 && M_VALUE > 240)
+				return 65;
+			else if (M_VALUE < 240 && M_VALUE >= 220)
+				return 60;
+			else if (M_VALUE < 220 && M_VALUE >= 208)
+				return 55;
+			else if (M_VALUE < 208 && M_VALUE >= 200)
+				return 50;
+			else if (M_VALUE < 200 && M_VALUE >= 190)
+				return 45;
+			else if (M_VALUE < 190 && M_VALUE >= 180)
+				return 40;
+			else if (M_VALUE < 179 && M_VALUE >= 169)
+				return 35;
+			else if (M_VALUE < 169 && M_VALUE >= 159)
+				return 30;
+			else if (M_VALUE < 159 && M_VALUE >= 148)
+				return 25;
+			else if (M_VALUE < 148 && M_VALUE >= 119)
+				return 20;
+			else if (M_VALUE < 119 && M_VALUE >= 90)
+				return 15;
+			else if (M_VALUE < 90)
+				return 10;
+			else if (M_VALUE < 69)
+				return 5;
 	}
 
 	return 255;
 }
+
+int cloud_flight::EXIT()
+{
+	hid_exit();
+	return 0;
+}
+
+
+// Other things to check for in a HyperX Cloud Flight headset
+// 
+// 
+//if (report[0] == 0x64)
+//{
+//	if (report[1] == 0x01)
+//	{
+//		std::cout << "Power on!";
+//	}
+//	else if (report[1] == 0x03)
+//	{
+//		std::cout << "Power off :(";
+//	}
+//}
+//if (report[0] == 0x65)
+//{
+//	if (report[1] == 0x04)
+//	{
+//		std::cout << "Muted!";
+//	}
+//	else {
+//		std::cout << "Not Muted!";
+//	}
+//}
+//
+//
