@@ -16,6 +16,8 @@ int cloud_flight::HID_DEVICE()
 		std::cerr << "Error opening device, checking charging..." << std::endl;
 	}
 
+	std::cout << "Welcome to your Hyper X Cloud Flight headset!\n\nBelow you'll find useful information regarding it.\n________________________________________\n";
+
 	do { READ_BATTERY(HID_HANDLE); } while (true);
 
 	EXIT();
@@ -23,6 +25,7 @@ int cloud_flight::HID_DEVICE()
 
 int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 {
+	int j;
 	unsigned char report[20];
 	report[0] = 0x21;
 	report[1] = 0xff;
@@ -43,7 +46,7 @@ int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 
 	int BATTERY_PERCENTAGE = CALCULATE_BATTERY_PERCENTAGE(CHARGE_STATE, M_VALUE);
 
-	std::cout << '\r' << "Battery At: " << BATTERY_PERCENTAGE;
+	std::cout << '\r' << "Battery: " << BATTERY_PERCENTAGE << "%";
 
 	return BATTERY_PERCENTAGE;
 }
