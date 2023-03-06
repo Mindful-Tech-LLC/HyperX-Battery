@@ -23,6 +23,10 @@ int cloud_flight::HID_DEVICE()
 	EXIT();
 }
 
+// To Do
+// Add a do {} while (true) loop to check for any other events
+// To do that, check the amount of bytes read when the event fires.
+
 int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 {
 	int j;
