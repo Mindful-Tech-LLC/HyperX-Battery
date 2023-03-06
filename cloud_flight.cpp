@@ -1,9 +1,9 @@
 #include "cloud_flight.h"
 
-const int VENDOR_ID = 0x0951; //2385
-const int PRODUCT_ID = 0x1723; //5923
+const int VENDOR_ID = 0x0951; // 2385
+const int PRODUCT_ID = 0x1723; // 5923
+// const int CHARGING_PRODUCT_ID = 0x1725; // 5925
 
-// TO DO
 int cloud_flight::HID_DEVICE()
 {
 	int HID;
@@ -13,7 +13,7 @@ int cloud_flight::HID_DEVICE()
 
 	if (!(HID_HANDLE = hid_open(VENDOR_ID, PRODUCT_ID, NULL)))
 	{
-		std::cerr << "Error opening device!" << std::endl;
+		std::cerr << "Error opening device, checking charging..." << std::endl;
 	}
 
 	do { READ_BATTERY(HID_HANDLE); } while (true);
