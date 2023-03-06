@@ -43,7 +43,7 @@ int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 
 	int BATTERY_PERCENTAGE = CALCULATE_BATTERY_PERCENTAGE(CHARGE_STATE, M_VALUE);
 
-	std::cout << '\r' << "Battery At: " << BATTERY_PERCENTAGE << std::flush;
+	std::cout << '\r' << "Battery At: " << BATTERY_PERCENTAGE;
 
 	return BATTERY_PERCENTAGE;
 }
