@@ -29,7 +29,6 @@ int cloud_flight::HID_DEVICE()
 
 int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 {
-	int j;
 	unsigned char report[20];
 	report[0] = 0x21;
 	report[1] = 0xff;
@@ -39,6 +38,8 @@ int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 	hid_read(HID_HANDLE, report, 20);
 
 #ifdef DEBUG
+	int j;
+
 	for (int j = 0; j < 20; j++)
 	{
 		std::cout << int((unsigned char)report[j]) << " | ";
