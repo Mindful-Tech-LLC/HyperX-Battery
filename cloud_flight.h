@@ -10,7 +10,6 @@ class cloud_flight
 {
 public:
 	static int HID_DEVICE();
-	static int CREATE_CONNECTION(hid_device* HIDHANDLE_, int VENDORID_, int PRODUCTID_);
 	static int READ_BATTERY(hid_device* dev);
 	static int CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE);
 	static int EXIT();

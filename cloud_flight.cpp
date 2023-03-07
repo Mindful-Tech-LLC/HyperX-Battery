@@ -13,7 +13,7 @@ int cloud_flight::HID_DEVICE()
 
 	if (!(HID_HANDLE = hid_open(VENDOR_ID, PRODUCT_ID, NULL)))
 	{
-		std::cerr << "Error opening device, checking charging..." << std::endl;
+		std::cerr << "Error opening device." << std::endl;
 	}
 
 	std::cout << "Welcome to your Hyper X Cloud Flight headset!\n\nBelow you'll find useful information regarding it.\n________________________________________\n";
