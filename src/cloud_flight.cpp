@@ -1,8 +1,7 @@
 #include "cloud_flight.h"
 
-const int VENDOR_ID = 0x0951; // 2385
-const int PRODUCT_ID = 0x1723; // 5923
-// const int CHARGING_PRODUCT_ID = 0x1725; // 5925
+const int VENDOR_ID = 0x0951;
+const int PRODUCT_ID = 0x1723;
 
 int cloud_flight::HID_DEVICE()
 {
@@ -15,10 +14,6 @@ int cloud_flight::HID_DEVICE()
 	{
 		std::cerr << "Error opening device." << std::endl;
 	}
-
-	std::cout << "Welcome to your Hyper X Cloud Flight headset!\n\nBelow you'll find useful information regarding it.\n________________________________________\n";
-
-	do { READ_BATTERY(HID_HANDLE); } while (true);
 
 	EXIT();
 }
