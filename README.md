@@ -1,12 +1,15 @@
 # HyperX Cloud Flight 
 
-### Triggers
-Sending `0x21 0xff 0x05` to the headset to get it's state.
 
+  
+| Vendor ID | Product ID |
+| :---: | :---: |
+| `0x0951` | `0x1723` |
 
-### States
-Battery has 3 states, `0x10`, `0xf` and `0xe`.
-
+| Triggers | Details |
+| :---: | :---: |
+| `0x21 0xff 0x05` | Get headset state. | 
+ 
 | <b>State</b> | <b>Details</b> |
 | :--- | :---: |
 | `0x10` | `200` should be battery full, and `199` charging |
