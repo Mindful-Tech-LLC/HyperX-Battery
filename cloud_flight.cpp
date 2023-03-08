@@ -189,7 +189,6 @@ int cloud_flight::EXIT()
 	return 0;
 }
 
-
 // Other things to check for in a HyperX Cloud Flight headset
 // 
 // 
