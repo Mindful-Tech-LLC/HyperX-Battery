@@ -1,6 +1,4 @@
 # HyperX Cloud Flight 
-
-
   
 | Vendor ID | Product ID |
 | :---: | :---: |
