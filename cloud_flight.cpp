@@ -56,108 +56,108 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 {
 	switch (CHARGE_STATE)
 	{
-	case 0x10:
-		if (M_VALUE <= 11)
-			return 200; // Full?
-		else
-			return 199; // Charging
-		/*else if (M_VALUE >= 0 && M_VALUE < 90)
-			return 10;
-		else if (M_VALUE >= 90 && M_VALUE < 119)
-			return 15;
-		else if (M_VALUE >= 120 && M_VALUE < 148)
-			return 20;
-		else if (M_VALUE >= 149 && M_VALUE < 159)
-			return 25;
-		else if (M_VALUE >= 160 && M_VALUE < 169)
-			return 30;
-		else if (M_VALUE >= 170 && M_VALUE < 179)
-			return 35;
-		else if (M_VALUE >= 180 && M_VALUE < 189)
-			return 40;
-		else if (M_VALUE >= 190 && M_VALUE < 199)
-			return 45;
-		else if (M_VALUE >= 200 && M_VALUE < 209)
-			return 50;
-		else if (M_VALUE >= 210 && M_VALUE < 219)
-			return 55;
-		else if (M_VALUE >= 220 && M_VALUE < 239)
-			return 60;
-		else if (M_VALUE >= 240 && M_VALUE < 255)
-			return 65;*/
+		case 0x10:
+			if (M_VALUE <= 11)
+				return 200; // Full?
+			else
+				return 199; // Charging
+			/*else if (M_VALUE >= 0 && M_VALUE < 90)
+				return 10;
+			else if (M_VALUE >= 90 && M_VALUE < 119)
+				return 15;
+			else if (M_VALUE >= 120 && M_VALUE < 148)
+				return 20;
+			else if (M_VALUE >= 149 && M_VALUE < 159)
+				return 25;
+			else if (M_VALUE >= 160 && M_VALUE < 169)
+				return 30;
+			else if (M_VALUE >= 170 && M_VALUE < 179)
+				return 35;
+			else if (M_VALUE >= 180 && M_VALUE < 189)
+				return 40;
+			else if (M_VALUE >= 190 && M_VALUE < 199)
+				return 45;
+			else if (M_VALUE >= 200 && M_VALUE < 209)
+				return 50;
+			else if (M_VALUE >= 210 && M_VALUE < 219)
+				return 55;
+			else if (M_VALUE >= 220 && M_VALUE < 239)
+				return 60;
+			else if (M_VALUE >= 240 && M_VALUE < 255)
+				return 65;*/
 
-	case 0xf:
-		if (M_VALUE >= 130)
-			return 100;
+		case 0xf:
+			if (M_VALUE >= 130)
+				return 100;
 		
-		if (M_VALUE < 130 && M_VALUE >= 120)
-			return 95;
+			if (M_VALUE < 130 && M_VALUE >= 120)
+				return 95;
 
-		if (M_VALUE < 120 && M_VALUE >= 100)
-			return 90;
+			if (M_VALUE < 120 && M_VALUE >= 100)
+				return 90;
 
-		if (M_VALUE < 100 && M_VALUE >= 70)
-			return 85;
+			if (M_VALUE < 100 && M_VALUE >= 70)
+				return 85;
 
-		if (M_VALUE < 70 && M_VALUE >= 50)
-			return 80;
+			if (M_VALUE < 70 && M_VALUE >= 50)
+				return 80;
 
-		if (M_VALUE < 50 && M_VALUE >= 20)
-			return 75;
+			if (M_VALUE < 50 && M_VALUE >= 20)
+				return 75;
 
-		if (M_VALUE < 20 && M_VALUE > 0)
-			return 70;
-		/*if (M_VALUE >= 0 && M_VALUE < 19)
-			return 70;
-		else if (M_VALUE >= 20 && M_VALUE < 49)
-			return 75;
-		else if (M_VALUE >= 50 && M_VALUE < 69)
-			return 80;
-		else if (M_VALUE >= 70 && M_VALUE < 99)
-			return 85;
-		else if (M_VALUE >= 100 && M_VALUE < 119)
-			return 90;
-		else if (M_VALUE >= 120 && M_VALUE < 129)
-			return 95;
-		else if (M_VALUE >= 130 && M_VALUE < 255)
-			return 100;*/
+			if (M_VALUE < 20 && M_VALUE > 0)
+				return 70;
+			/*if (M_VALUE >= 0 && M_VALUE < 19)
+				return 70;
+			else if (M_VALUE >= 20 && M_VALUE < 49)
+				return 75;
+			else if (M_VALUE >= 50 && M_VALUE < 69)
+				return 80;
+			else if (M_VALUE >= 70 && M_VALUE < 99)
+				return 85;
+			else if (M_VALUE >= 100 && M_VALUE < 119)
+				return 90;
+			else if (M_VALUE >= 120 && M_VALUE < 129)
+				return 95;
+			else if (M_VALUE >= 130 && M_VALUE < 255)
+				return 100;*/
 
-	case 0xe:
-		if (M_VALUE < 250 && M_VALUE > 240)
-			return 65;
+		case 0xe:
+			if (M_VALUE < 250 && M_VALUE > 240)
+				return 65;
 		
-		if (M_VALUE < 240 && M_VALUE >= 220)
-			return 60;
+			if (M_VALUE < 240 && M_VALUE >= 220)
+				return 60;
 		
-		if (M_VALUE < 220 && M_VALUE >= 208)
-			return 55;
+			if (M_VALUE < 220 && M_VALUE >= 208)
+				return 55;
 		
-		if (M_VALUE < 208 && M_VALUE >= 200)
-			return 50;
+			if (M_VALUE < 208 && M_VALUE >= 200)
+				return 50;
 		
-		if (M_VALUE < 200 && M_VALUE >= 190)
-			return 45;
+			if (M_VALUE < 200 && M_VALUE >= 190)
+				return 45;
 		
-		if (M_VALUE < 190 && M_VALUE >= 180)
-			return 40;
+			if (M_VALUE < 190 && M_VALUE >= 180)
+				return 40;
 		
-		if (M_VALUE < 179 && M_VALUE >= 169)
-			return 35;
+			if (M_VALUE < 179 && M_VALUE >= 169)
+				return 35;
 		
-		if (M_VALUE < 169 && M_VALUE >= 159)
-			return 30;
+			if (M_VALUE < 169 && M_VALUE >= 159)
+				return 30;
 		
-		if (M_VALUE < 159 && M_VALUE >= 148)
-			return 25;
+			if (M_VALUE < 159 && M_VALUE >= 148)
+				return 25;
 		
-		if (M_VALUE < 148 && M_VALUE >= 119)
-			return 20;
+			if (M_VALUE < 148 && M_VALUE >= 119)
+				return 20;
 		
-		if (M_VALUE < 119 && M_VALUE >= 90)
-			return 15;
+			if (M_VALUE < 119 && M_VALUE >= 90)
+				return 15;
 		
-		if (M_VALUE < 90)
-			return 10;
+			if (M_VALUE < 90)
+				return 10;
 	}
 
 	return 255;
