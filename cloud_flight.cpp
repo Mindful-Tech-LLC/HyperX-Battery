@@ -13,8 +13,10 @@ int cloud_flight::HID_DEVICE(hid_device* HID_HANDLE)
 		std::cerr << "Error opening device." << std::endl;
 	}
 
-	READ_BATTERY(HID_HANDLE);
-	//READ_MUTE(HID_HANDLE);
+	do {
+		READ_BATTERY(HID_HANDLE);
+		//READ_MUTE(HID_HANDLE);
+	} while (true);
 
 	return EXIT();
 }
