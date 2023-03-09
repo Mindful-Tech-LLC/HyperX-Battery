@@ -85,6 +85,11 @@ int cloud_flight::READ_MUTE(hid_device* HID_HANDLE)
 	return 0;
 }
 
+//int cloud_flight::READ_POWER(hid_device* HID_HANDLE)
+//{
+//	return 0;
+//}
+
 // Not using compiler extension for ranges in case x ... y:
 int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 {
