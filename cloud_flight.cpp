@@ -2,6 +2,7 @@
 
 const int VENDOR_ID = 0x0951;
 const int PRODUCT_ID = 0x1723;
+//const int PRODUCT_IDS[] = { 0x1723, 0x16c4 };
 
 int cloud_flight::HID_DEVICE(hid_device* HID_HANDLE)
 {
@@ -10,47 +11,78 @@ int cloud_flight::HID_DEVICE(hid_device* HID_HANDLE)
 
 	if (!(HID_HANDLE = hid_open(VENDOR_ID, PRODUCT_ID, NULL)))
 	{
-		std::cerr << "Error opening device." << std::endl;
+		std::cerr << "Error opening device " << PRODUCT_ID << std::endl;
 	}
 
-	do {
-		READ_BATTERY(HID_HANDLE);
-		//READ_MUTE(HID_HANDLE);
+	do
+	{
+		READ_STATES(HID_HANDLE);
 	} while (true);
 
+
 	return EXIT();
+}
+
+int cloud_flight::READ_STATES(hid_device* HID_HANDLE)
+{
+	READ_BATTERY(HID_HANDLE);
+	//READ_MUTE(HID_HANDLE);
+	//READ_POWER(HID_HANDLE);
+
+	return 0;
 }
 
 int cloud_flight::READ_BATTERY(hid_device* HID_HANDLE)
 {
 	const int REPORT_SIZE = 20;
+	unsigned char REPORT[REPORT_SIZE];
+	REPORT[0] = 0x21;
+	REPORT[1] = 0xff;
+	REPORT[2] = 0x05;
 
-	unsigned char report[REPORT_SIZE];
-	report[0] = 0x21;
-	report[1] = 0xff;
-	report[2] = 0x05;
-
-	hid_write(HID_HANDLE, report, REPORT_SIZE);
-	hid_read(HID_HANDLE, report, REPORT_SIZE);
+	hid_write(HID_HANDLE, REPORT, REPORT_SIZE);
+	hid_read(HID_HANDLE, REPORT, REPORT_SIZE);
 
 #ifdef DEBUG
 	int j;
 	for (j = 0; j < REPORT_SIZE; j++)
 	{
-		std::cout << int((unsigned char)report[j]) << " | ";
+		std::cout << int((unsigned char)REPORT[j]) << " | ";
 	}
 #endif
 
-	int CHARGE_STATE = report[3];
-	int M_VALUE = report[4] != 0 ? report[4] : CHARGE_STATE;
+	int CHARGE_STATE = REPORT[3];
+	int M_VALUE = REPORT[4] != 0 ? REPORT[4] : CHARGE_STATE;
 
 	int BATTERY_PERCENTAGE = CALCULATE_BATTERY_PERCENTAGE(CHARGE_STATE, M_VALUE);
 	if (BATTERY_PERCENTAGE == 199)
 		std::cout << '\r' << "Battery: [Charging]";
+	else if (BATTERY_PERCENTAGE == 200)
+		std::cout << '\r' << "Battery: 100%";
 	else
 		std::cout << '\r' << "Battery: " << BATTERY_PERCENTAGE << "%";
 
 	return BATTERY_PERCENTAGE;
+}
+
+// Not working
+int cloud_flight::READ_MUTE(hid_device* HID_HANDLE)
+{
+	unsigned char REPORT[20];
+	REPORT[0] = 0x21;
+	REPORT[1] = 0xff;
+	REPORT[2] = 0x05;
+
+	hid_write(HID_HANDLE, REPORT, 20);
+	hid_read(HID_HANDLE, REPORT, 20);
+
+	int j;
+	for (j = 0; j < 5; j++)
+	{
+		std::cout << int((unsigned char)REPORT[j]) << " | ";
+	}
+
+	return 0;
 }
 
 // Not using compiler extension for ranges in case x ... y:
@@ -59,11 +91,11 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 	switch (CHARGE_STATE)
 	{
 		case 0x10:
-			if (M_VALUE <= 11)
+			if (M_VALUE >= 11)
 				return 200; // Full?
 			else
 				return 199; // Charging
-			/*else if (M_VALUE >= 0 && M_VALUE < 90)
+			/*if (M_VALUE >= 0 && M_VALUE < 90)
 				return 10;
 			else if (M_VALUE >= 90 && M_VALUE < 119)
 				return 15;
@@ -91,23 +123,17 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 		case 0xf:
 			if (M_VALUE >= 130)
 				return 100;
-		
-			if (M_VALUE < 130 && M_VALUE >= 120)
+			else if (M_VALUE < 130 && M_VALUE >= 120)
 				return 95;
-
-			if (M_VALUE < 120 && M_VALUE >= 100)
+			else if (M_VALUE < 120 && M_VALUE >= 100)
 				return 90;
-
-			if (M_VALUE < 100 && M_VALUE >= 70)
+			else if (M_VALUE < 100 && M_VALUE >= 70)
 				return 85;
-
-			if (M_VALUE < 70 && M_VALUE >= 50)
+			else if (M_VALUE < 70 && M_VALUE >= 50)
 				return 80;
-
-			if (M_VALUE < 50 && M_VALUE >= 20)
+			else if (M_VALUE < 50 && M_VALUE >= 20)
 				return 75;
-
-			if (M_VALUE < 20 && M_VALUE > 0)
+			else if (M_VALUE < 20 && M_VALUE > 0)
 				return 70;
 			/*if (M_VALUE >= 0 && M_VALUE < 19)
 				return 70;
@@ -127,62 +153,31 @@ int cloud_flight::CALCULATE_BATTERY_PERCENTAGE(int CHARGE_STATE, int M_VALUE)
 		case 0xe:
 			if (M_VALUE < 250 && M_VALUE > 240)
 				return 65;
-		
-			if (M_VALUE < 240 && M_VALUE >= 220)
+			else if (M_VALUE < 240 && M_VALUE >= 220)
 				return 60;
-		
-			if (M_VALUE < 220 && M_VALUE >= 208)
+			else if (M_VALUE < 220 && M_VALUE >= 208)
 				return 55;
-		
-			if (M_VALUE < 208 && M_VALUE >= 200)
+			else if (M_VALUE < 208 && M_VALUE >= 200)
 				return 50;
-		
-			if (M_VALUE < 200 && M_VALUE >= 190)
+			else if (M_VALUE < 200 && M_VALUE >= 190)
 				return 45;
-		
-			if (M_VALUE < 190 && M_VALUE >= 180)
+			else if (M_VALUE < 190 && M_VALUE >= 180)
 				return 40;
-		
-			if (M_VALUE < 179 && M_VALUE >= 169)
+			else if (M_VALUE < 179 && M_VALUE >= 169)
 				return 35;
-		
-			if (M_VALUE < 169 && M_VALUE >= 159)
+			else if (M_VALUE < 169 && M_VALUE >= 159)
 				return 30;
-		
-			if (M_VALUE < 159 && M_VALUE >= 148)
+			else if (M_VALUE < 159 && M_VALUE >= 148)
 				return 25;
-		
-			if (M_VALUE < 148 && M_VALUE >= 119)
+			else if (M_VALUE < 148 && M_VALUE >= 119)
 				return 20;
-		
-			if (M_VALUE < 119 && M_VALUE >= 90)
+			else if (M_VALUE < 119 && M_VALUE >= 90)
 				return 15;
-		
-			if (M_VALUE < 90)
+			else if (M_VALUE < 90)
 				return 10;
 	}
 
 	return 255;
-}
-
-// Not working
-int cloud_flight::READ_MUTE(hid_device* HID_HANDLE)
-{
-	unsigned char report[20];
-	report[0] = 0x21;
-	report[1] = 0xff;
-	report[2] = 0x05;
-
-	hid_write(HID_HANDLE, report, 20);
-	hid_read(HID_HANDLE, report, 20);
-
-	int j;
-	for (j = 0; j < 5; j++)
-	{
-		std::cout << int((unsigned char)report[j]) << " | ";
-	}
-
-	return 0;
 }
 
 int cloud_flight::EXIT()
