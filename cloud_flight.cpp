@@ -190,30 +190,3 @@ int cloud_flight::EXIT()
 	hid_exit();
 	return 0;
 }
-
-// Other things to check for in a HyperX Cloud Flight headset
-// 
-// 
-//if (report[0] == 0x64)
-//{
-//	if (report[1] == 0x01)
-//	{
-//		std::cout << "Power on!";
-//	}
-//	else if (report[1] == 0x03)
-//	{
-//		std::cout << "Power off :(";
-//	}
-//}
-//if (report[0] == 0x65)
-//{
-//	if (report[1] == 0x04)
-//	{
-//		std::cout << "Muted!";
-//	}
-//	else {
-//		std::cout << "Not Muted!";
-//	}
-//}
-//
-//
