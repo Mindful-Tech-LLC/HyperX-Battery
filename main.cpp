@@ -9,5 +9,5 @@ int main()
 
 	cloud_flight::HID_DEVICE(HID_HANDLE);
 	
-	return 1;
+	return 0;
 }
